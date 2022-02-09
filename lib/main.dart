@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:csi5112_project/LoginPage.dart';
 import 'package:flutter/material.dart';
 import 'MainPage.dart';
 
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.black,
         ),
       ),
-      home: const MainPage(),
+      home: const Login(),
     );
   }
 }
