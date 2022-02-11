@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'item_page/item_page.dart';
 import 'order_page/order_page.dart';
-import '../CartPage.dart';
+import '../view/item_cart_page/item_cart_page.dart';
 import 'user_page/user_page.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({ Key? key, required this.isMerchant }) : super(key: key);
+  const MainPage({Key? key, required this.isMerchant}) : super(key: key);
 
   final bool isMerchant;
 
@@ -14,13 +14,13 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-
   int selectedIndex = 0;
-  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);
   static const List<Widget> titleOptions = <Widget>[
     Text(
       'Items Market',
-      style: optionStyle, 
+      style: optionStyle,
     ),
     Text(
       'Shopping Cart',
@@ -41,7 +41,7 @@ class MainPageState extends State<MainPage> {
       selectedIndex = index;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     List pages = [
@@ -52,11 +52,12 @@ class MainPageState extends State<MainPage> {
     ];
     return Scaffold(
       appBar: AppBar(
-        title: SizedBox(child: Center(child: titleOptions.elementAt(selectedIndex))),
+        title: SizedBox(
+            child: Center(child: titleOptions.elementAt(selectedIndex))),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.red,
       ),
-      // Use Tab Navigator to make sure all the route changes are inside the BottomBar Component. 
+      // Use Tab Navigator to make sure all the route changes are inside the BottomBar Component.
       body: IndexedStack(
         index: selectedIndex,
         children: <Widget>[
@@ -98,7 +99,8 @@ class MainPageState extends State<MainPage> {
 }
 
 class TabNavigator extends StatelessWidget {
-  const TabNavigator({ Key? key, required this.index, required this.pages }) : super(key: key);
+  const TabNavigator({Key? key, required this.index, required this.pages})
+      : super(key: key);
 
   final int index;
   final List pages;
