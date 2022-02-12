@@ -80,11 +80,20 @@ class _CartBottomBarState extends State<CartBottomBar> {
 }
 
 class CardBox extends StatefulWidget {
-  const CardBox({Key? key, required this.selectedValue, this.updateNum})
+  const CardBox(
+      {Key? key,
+      required this.selectedValue,
+      this.updateNum,
+      required this.isClicked,
+      this.updatePrice,
+      required this.itemPrice})
       : super(key: key);
 
   final int selectedValue;
   final updateNum;
+  final bool isClicked;
+  final updatePrice;
+  final String itemPrice;
   @override
   _CartCardBoxState createState() => _CartCardBoxState();
 }
@@ -151,6 +160,10 @@ class _CartCardBoxState extends State<CardBox> {
           // 选了某个选项时触发
           onChanged: (int? newValue) {
             setState(() {
+              if (widget.isClicked) {
+                widget.updatePrice(
+                    (newValue! - value) * int.parse(widget.itemPrice));
+              }
               value = newValue!;
               widget.updateNum(value);
             });
@@ -169,13 +182,15 @@ class ItemCard extends StatefulWidget {
       required this.item,
       this.updatePrice,
       required this.amountPrice,
-      required this.isClickedAll})
+      required this.isClickedAll,
+      required this.amountPriceAdd})
       : super(key: key);
 
   final Item item;
   final updatePrice;
   final int amountPrice;
   final bool isClickedAll;
+  final int amountPriceAdd;
 
   @override
   _CartCardState createState() => _CartCardState();
@@ -192,11 +207,11 @@ class _CartCardState extends State<ItemCard> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    isClicked = widget.isClickedAll;
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   isClicked = widget.isClickedAll;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -206,9 +221,11 @@ class _CartCardState extends State<ItemCard> {
       child: Column(
         children: <Widget>[
           CardBox(
-            selectedValue: selectedValue,
-            updateNum: updateNum,
-          ),
+              selectedValue: selectedValue,
+              updateNum: updateNum,
+              isClicked: isClicked,
+              updatePrice: widget.updatePrice,
+              itemPrice: widget.item.price),
           AspectRatio(
             aspectRatio: 16 / 9,
             child: Image.network(
@@ -227,10 +244,8 @@ class _CartCardState extends State<ItemCard> {
                 setState(() {
                   isClicked = !isClicked;
                   int res = isClicked
-                      ? widget.amountPrice +
-                          int.parse(widget.item.price) * selectedValue
-                      : widget.amountPrice -
-                          int.parse(widget.item.price) * selectedValue;
+                      ? int.parse(widget.item.price) * selectedValue
+                      : -(int.parse(widget.item.price) * selectedValue);
                   widget.updatePrice(res);
                 });
               },
@@ -269,6 +284,7 @@ class CartListState extends State<CartList>
   bool isSearching = false;
   bool isClicked = false;
   bool isClickedAll = false;
+  int amountPriceAdd = 0;
   CartListState() {
     _presenter = ItemsListPresenterCart(this);
   }
@@ -279,7 +295,8 @@ class CartListState extends State<CartList>
           item: value,
           updatePrice: updatePrice,
           amountPrice: amountPrice,
-          isClickedAll: isClickedAll);
+          isClickedAll: isClickedAll,
+          amountPriceAdd: amountPriceAdd);
     });
     return items.toList();
   }
@@ -294,7 +311,7 @@ class CartListState extends State<CartList>
 
   void updatePrice(int value) {
     setState(() {
-      amountPrice = value;
+      amountPrice = amountPrice + value;
     });
   }
 
